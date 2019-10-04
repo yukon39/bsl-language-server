@@ -25,6 +25,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Archive test results
+      if: always()
       uses: actions/upload-artifact@v1
       with:
         name: junit_report_${{ matrix.os }}_${{ matrix.java_version }}
