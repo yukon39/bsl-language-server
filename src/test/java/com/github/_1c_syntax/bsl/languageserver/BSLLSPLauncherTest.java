@@ -87,7 +87,7 @@ class BSLLSPLauncherTest {
 
   @Test
   @ExpectSystemExitWithStatus(0)
-  void testAnalyze() {
+  void testAnalyze() throws InterruptedException {
     // given
     String[] args = new String[]{"--analyze", "--srcDir", "./src/test/resources/cli"};
 
@@ -97,6 +97,7 @@ class BSLLSPLauncherTest {
     } catch (RuntimeException ignored) {
       // catch prevented system.exit call
     }
+    Thread.sleep(100);
 
     // then
     // main-method should runs without exceptions
@@ -106,7 +107,7 @@ class BSLLSPLauncherTest {
 
   @Test
   @ExpectSystemExitWithStatus(0)
-  void testFormat() {
+  void testFormat() throws InterruptedException {
     // given
     String[] args = new String[]{"--format", "--srcDir", "./src/test/resources/cli"};
 
@@ -116,6 +117,7 @@ class BSLLSPLauncherTest {
     } catch (RuntimeException ignored) {
       // catch prevented system.exit call
     }
+    Thread.sleep(100);
 
     // then
     // main-method should runs without exceptions
