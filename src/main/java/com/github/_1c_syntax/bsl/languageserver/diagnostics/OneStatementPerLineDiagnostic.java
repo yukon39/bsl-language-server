@@ -22,6 +22,7 @@
 package com.github._1c_syntax.bsl.languageserver.diagnostics;
 
 import com.github._1c_syntax.bsl.languageserver.context.DocumentContext;
+import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticInfo;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticMetadata;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticSeverity;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticTag;
@@ -51,11 +52,15 @@ import java.util.regex.Pattern;
   }
 )
 public class OneStatementPerLineDiagnostic extends AbstractVisitorDiagnostic implements QuickFixProvider {
-  private final static Pattern NEW_LINE_PATTERN = Pattern.compile(
+  private static final Pattern NEW_LINE_PATTERN = Pattern.compile(
     "^(\\s+?)[^\\s]",
     Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
   private int previousLineNumber;
   private int previousDiagnosticLineNumber;
+
+  public OneStatementPerLineDiagnostic(DiagnosticInfo info) {
+    super(info);
+  }
 
   @Override
   public ParseTree visitStatement(BSLParser.StatementContext ctx) {
@@ -110,7 +115,7 @@ public class OneStatementPerLineDiagnostic extends AbstractVisitorDiagnostic imp
 
     return CodeActionProvider.createCodeActions(
       textEdits,
-      getResourceString("quickFixMessage"),
+      info.getResourceString("quickFixMessage"),
       documentContext.getUri(),
       diagnostics
     );

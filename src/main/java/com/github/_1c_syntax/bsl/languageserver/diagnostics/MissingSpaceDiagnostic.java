@@ -22,6 +22,7 @@
 package com.github._1c_syntax.bsl.languageserver.diagnostics;
 
 import com.github._1c_syntax.bsl.languageserver.context.DocumentContext;
+import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticInfo;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticMetadata;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticParameter;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticSeverity;
@@ -106,12 +107,16 @@ public class MissingSpaceDiagnostic extends AbstractVisitorDiagnostic implements
   private Pattern patternLr = compilePattern(listForCheckLeftAndRight);
   private Pattern patternNotSpace = compilePattern("\\S+");
 
+  public MissingSpaceDiagnostic(DiagnosticInfo info) {
+    super(info);
+  }
+
   @Override
   public List<Diagnostic> getDiagnostics(DocumentContext documentContext) {
 
-    sampleMessage[0] = getResourceString("wordLeft");         // "Слева"
-    sampleMessage[1] = getResourceString("wordRight");        // "Справа"
-    sampleMessage[2] = getResourceString("wordLeftAndRight"); // "Слева и справа"
+    sampleMessage[0] = info.getResourceString("wordLeft");         // "Слева"
+    sampleMessage[1] = info.getResourceString("wordRight");        // "Справа"
+    sampleMessage[2] = info.getResourceString("wordLeftAndRight"); // "Слева и справа"
 
     diagnosticStorage.clearDiagnostics();
 
@@ -286,7 +291,7 @@ public class MissingSpaceDiagnostic extends AbstractVisitorDiagnostic implements
   }
 
   private String getErrorMessage(int errCode, String tokenText) {
-    return getDiagnosticMessage(sampleMessage[errCode], tokenText);
+    return info.getDiagnosticMessage(sampleMessage[errCode], tokenText);
   }
 
   @Override
@@ -323,7 +328,7 @@ public class MissingSpaceDiagnostic extends AbstractVisitorDiagnostic implements
 
     return CodeActionProvider.createCodeActions(
       textEdits,
-      getResourceString("quickFixMessage"),
+      info.getResourceString("quickFixMessage"),
       documentContext.getUri(),
       diagnostics
     );

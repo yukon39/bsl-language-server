@@ -25,6 +25,7 @@ import com.github._1c_syntax.bsl.languageserver.configuration.ComputeDiagnostics
 import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConfiguration;
 import com.github._1c_syntax.bsl.languageserver.context.DocumentContext;
 import com.github._1c_syntax.bsl.languageserver.context.ServerContext;
+import com.github._1c_syntax.bsl.languageserver.diagnostics.DiagnosticSupplier;
 import com.github._1c_syntax.bsl.languageserver.providers.CodeActionProvider;
 import com.github._1c_syntax.bsl.languageserver.providers.CodeLensProvider;
 import com.github._1c_syntax.bsl.languageserver.providers.DiagnosticProvider;
@@ -77,6 +78,7 @@ public class BSLTextDocumentService implements TextDocumentService, LanguageClie
 
   private final ServerContext context;
   private final LanguageServerConfiguration configuration;
+  private final DiagnosticSupplier diagnosticSupplier;
   private final DiagnosticProvider diagnosticProvider;
   private final CodeActionProvider codeActionProvider;
   private final CodeLensProvider codeLensProvider;
@@ -87,8 +89,9 @@ public class BSLTextDocumentService implements TextDocumentService, LanguageClie
   public BSLTextDocumentService(LanguageServerConfiguration configuration, ServerContext context) {
     this.configuration = configuration;
     this.context = context;
-    diagnosticProvider = new DiagnosticProvider(this.configuration);
-    codeActionProvider = new CodeActionProvider(diagnosticProvider);
+    diagnosticSupplier = new DiagnosticSupplier(configuration);
+    diagnosticProvider = new DiagnosticProvider(this.diagnosticSupplier);
+    codeActionProvider = new CodeActionProvider(this.diagnosticProvider, this.diagnosticSupplier);
     codeLensProvider = new CodeLensProvider(this.configuration);
   }
 

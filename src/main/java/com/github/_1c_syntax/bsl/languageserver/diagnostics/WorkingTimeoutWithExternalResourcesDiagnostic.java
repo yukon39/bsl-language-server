@@ -21,6 +21,7 @@
  */
 package com.github._1c_syntax.bsl.languageserver.diagnostics;
 
+import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticInfo;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticMetadata;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticSeverity;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticTag;
@@ -57,6 +58,10 @@ public class WorkingTimeoutWithExternalResourcesDiagnostic extends AbstractVisit
       "WSПрокси|WSProxy|ИнтернетПочтовыйПрофиль|InternetMailProfile)",
     Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
   private static final int DEFAULT_NUMBER_TIMEOUT = 5;
+
+  public WorkingTimeoutWithExternalResourcesDiagnostic(DiagnosticInfo info) {
+    super(info);
+  }
 
   private boolean checkTimeoutIntoParamList(BSLParser.NewExpressionContext newExpression, AtomicBoolean isContact) {
     int numberTimeout = DEFAULT_NUMBER_TIMEOUT;
@@ -118,7 +123,7 @@ public class WorkingTimeoutWithExternalResourcesDiagnostic extends AbstractVisit
             checkNextStatement(listNextStatements, variableName, isContact);
           }
           if (isContact.get()) {
-            diagnosticStorage.addDiagnostic(newExpression, getDiagnosticMessage());
+            diagnosticStorage.addDiagnostic(newExpression, info.getDiagnosticMessage());
           }
         }
       }

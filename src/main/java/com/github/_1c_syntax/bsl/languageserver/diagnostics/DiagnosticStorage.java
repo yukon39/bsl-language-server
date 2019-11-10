@@ -29,8 +29,11 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticRelatedInformation;
 import org.eclipse.lsp4j.Range;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github._1c_syntax.bsl.languageserver.providers.DiagnosticProvider.SOURCE;
 
 public class DiagnosticStorage {
 
@@ -50,49 +53,49 @@ public class DiagnosticStorage {
   }
 
   protected void addDiagnostic(BSLParserRuleContext node) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(diagnostic, node));
+    diagnosticList.add(createDiagnostic(diagnostic, node));
   }
 
   protected void addDiagnostic(BSLParserRuleContext node, String diagnosticMessage) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(diagnostic, diagnosticMessage, node));
+    diagnosticList.add(createDiagnostic(diagnostic, diagnosticMessage, node));
   }
 
   protected void addDiagnostic(int startLine, int startChar, int endLine, int endChar) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(diagnostic, startLine, startChar, endLine, endChar));
+    diagnosticList.add(createDiagnostic(diagnostic, startLine, startChar, endLine, endChar));
   }
 
   protected void addDiagnostic(Range range) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       range,
-      diagnostic.getDiagnosticMessage()));
+      diagnostic.getInfo().getDiagnosticMessage()));
   }
 
   protected void addDiagnostic(Range range, String diagnosticMessage) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       range,
       diagnosticMessage));
   }
 
   protected void addDiagnostic(Token token) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       Ranges.create(token),
-      diagnostic.getDiagnosticMessage()
+      diagnostic.getInfo().getDiagnosticMessage()
     ));
   }
 
   protected void addDiagnostic(Token startToken, Token endToken) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       Ranges.create(startToken, endToken),
-      diagnostic.getDiagnosticMessage()
+      diagnostic.getInfo().getDiagnosticMessage()
     ));
   }
 
   protected void addDiagnostic(Token token, String diagnosticMessage) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       Ranges.create(token),
       diagnosticMessage
@@ -108,11 +111,11 @@ public class DiagnosticStorage {
   }
 
   protected void addDiagnostic(BSLParserRuleContext node, List<DiagnosticRelatedInformation> relatedInformation) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(diagnostic, node, relatedInformation));
+    diagnosticList.add(createDiagnostic(diagnostic, node, relatedInformation));
   }
 
   public void addDiagnostic(Token token, List<DiagnosticRelatedInformation> relatedInformation) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(diagnostic, token, relatedInformation));
+    diagnosticList.add(createDiagnostic(diagnostic, token, relatedInformation));
   }
 
   public void addDiagnostic(
@@ -120,7 +123,7 @@ public class DiagnosticStorage {
     String diagnosticMessage,
     List<DiagnosticRelatedInformation> relatedInformation
   ) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       Ranges.create(node),
       diagnosticMessage,
@@ -133,7 +136,7 @@ public class DiagnosticStorage {
     String diagnosticMessage,
     List<DiagnosticRelatedInformation> relatedInformation
   ) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       Ranges.create(token),
       diagnosticMessage,
@@ -146,13 +149,90 @@ public class DiagnosticStorage {
     String diagnosticMessage,
     List<DiagnosticRelatedInformation> relatedInformation
   ) {
-    diagnosticList.add(BSLDiagnostic.createDiagnostic(
+    diagnosticList.add(createDiagnostic(
       diagnostic,
       range,
       diagnosticMessage,
       relatedInformation
     ));
   }
+
+  public static Diagnostic createDiagnostic(BSLDiagnostic bslDiagnostic, BSLParserRuleContext node) {
+    return createDiagnostic(bslDiagnostic, Ranges.create(node), bslDiagnostic.getInfo().getDiagnosticMessage());
+  }
+
+  public static Diagnostic createDiagnostic(
+    BSLDiagnostic bslDiagnostic,
+    BSLParserRuleContext node,
+    List<DiagnosticRelatedInformation> relatedInformation
+  ) {
+    return createDiagnostic(
+      bslDiagnostic,
+      Ranges.create(node),
+      bslDiagnostic.getInfo().getDiagnosticMessage(),
+      relatedInformation
+    );
+  }
+
+  public static Diagnostic createDiagnostic(
+    BSLDiagnostic bslDiagnostic,
+    Token token,
+    List<DiagnosticRelatedInformation> relatedInformation
+  ) {
+    return createDiagnostic(
+      bslDiagnostic,
+      Ranges.create(token),
+      bslDiagnostic.getInfo().getDiagnosticMessage(),
+      relatedInformation
+    );
+  }
+
+  public static Diagnostic createDiagnostic(BSLDiagnostic bslDiagnostic, String diagnosticMessage, BSLParserRuleContext node) {
+    return createDiagnostic(bslDiagnostic, Ranges.create(node), diagnosticMessage);
+  }
+
+  public static Diagnostic createDiagnostic(
+    BSLDiagnostic bslDiagnostic,
+    int startLine,
+    int startChar,
+    int endLine,
+    int endChar
+  ) {
+    return createDiagnostic(
+      bslDiagnostic,
+      Ranges.create(startLine, startChar, endLine, endChar),
+      bslDiagnostic.getInfo().getDiagnosticMessage()
+    );
+  }
+
+  public static Diagnostic createDiagnostic(BSLDiagnostic bslDiagnostic, Range range, String diagnosticMessage) {
+    return createDiagnostic(
+      bslDiagnostic,
+      range,
+      diagnosticMessage,
+      null
+    );
+
+  }
+
+  public static Diagnostic createDiagnostic(
+    BSLDiagnostic bslDiagnostic,
+    Range range,
+    String diagnosticMessage,
+    @Nullable
+      List<DiagnosticRelatedInformation> relatedInformation
+  ) {
+    Diagnostic diagnostic = new Diagnostic(
+      range,
+      diagnosticMessage,
+      bslDiagnostic.getInfo().getLSPDiagnosticSeverity(),
+      SOURCE,
+      bslDiagnostic.getInfo().getDiagnosticCode()
+    );
+
+    if (relatedInformation != null) {
+      diagnostic.setRelatedInformation(relatedInformation);
+    }
+    return diagnostic;
+  }
 }
-
-

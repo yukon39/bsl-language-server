@@ -23,6 +23,7 @@ package com.github._1c_syntax.bsl.languageserver.codeactions;
 
 import com.github._1c_syntax.bsl.languageserver.context.DocumentContext;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.BSLDiagnostic;
+import com.github._1c_syntax.bsl.languageserver.diagnostics.DiagnosticSupplier;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.QuickFixProvider;
 import com.github._1c_syntax.bsl.languageserver.providers.DiagnosticProvider;
 import org.eclipse.lsp4j.CodeAction;
@@ -31,12 +32,16 @@ import org.eclipse.lsp4j.Diagnostic;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class QuickFixCodeActionSupplier extends AbstractQuickFixSupplier {
 
-  public QuickFixCodeActionSupplier(DiagnosticProvider diagnosticProvider) {
+  private final DiagnosticSupplier diagnosticSupplier;
+
+  public QuickFixCodeActionSupplier(DiagnosticProvider diagnosticProvider, DiagnosticSupplier diagnosticSupplier) {
     super(diagnosticProvider);
+    this.diagnosticSupplier = diagnosticSupplier;
   }
 
   @Override
@@ -55,12 +60,20 @@ public class QuickFixCodeActionSupplier extends AbstractQuickFixSupplier {
     DocumentContext documentContext
   ) {
 
-    Class<? extends BSLDiagnostic> bslDiagnosticClass = DiagnosticProvider.getBSLDiagnosticClass(diagnostic);
-    if (bslDiagnosticClass == null || !QuickFixProvider.class.isAssignableFrom(bslDiagnosticClass)) {
+    Optional<Class<? extends BSLDiagnostic>> diagnosticClass
+      = diagnosticSupplier.getDiagnosticClass(diagnostic.getCode());
+
+    if (!diagnosticClass.isPresent()) {
       return Collections.emptyList();
     }
 
-    BSLDiagnostic diagnosticInstance = diagnosticProvider.getDiagnosticInstance(bslDiagnosticClass);
+    Class<? extends BSLDiagnostic> bslDiagnosticClass = diagnosticClass.get();
+
+    if (!QuickFixProvider.class.isAssignableFrom(bslDiagnosticClass)) {
+      return Collections.emptyList();
+    }
+
+    BSLDiagnostic diagnosticInstance = diagnosticSupplier.getDiagnosticInstance(bslDiagnosticClass);
     return ((QuickFixProvider) diagnosticInstance).getQuickFixes(
       Collections.singletonList(diagnostic),
       params,

@@ -23,6 +23,7 @@ package com.github._1c_syntax.bsl.languageserver.providers;
 
 import com.github._1c_syntax.bsl.languageserver.context.DocumentContext;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.CanonicalSpellingKeywordsDiagnostic;
+import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticInfo;
 import com.github._1c_syntax.bsl.languageserver.util.TestUtils;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -54,12 +55,12 @@ class CodeActionProviderTest {
     DiagnosticProvider diagnosticProvider = new DiagnosticProvider();
     List<Diagnostic> diagnostics = diagnosticProvider.computeDiagnostics(documentContext).stream()
       .filter(diagnostic -> {
-        String diagnosticCode = DiagnosticProvider.getDiagnosticCode(CanonicalSpellingKeywordsDiagnostic.class);
+        String diagnosticCode = DiagnosticInfo.getDiagnosticCode(CanonicalSpellingKeywordsDiagnostic.class);
         return diagnostic.getCode().equals(diagnosticCode);
       })
       .collect(Collectors.toList());
 
-    CodeActionProvider codeActionProvider = new CodeActionProvider(diagnosticProvider);
+    CodeActionProvider codeActionProvider = new CodeActionProvider(diagnosticProvider, this.diagnosticSupplier);
 
     CodeActionParams params = new CodeActionParams();
     TextDocumentIdentifier textDocumentIdentifier = new TextDocumentIdentifier(documentContext.getUri());
@@ -92,7 +93,7 @@ class CodeActionProviderTest {
     DocumentContext documentContext = TestUtils.getDocumentContextFromFile(filePath);
 
     DiagnosticProvider diagnosticProvider = new DiagnosticProvider();
-    CodeActionProvider codeActionProvider = new CodeActionProvider(diagnosticProvider);
+    CodeActionProvider codeActionProvider = new CodeActionProvider(diagnosticProvider, this.diagnosticSupplier);
 
     CodeActionParams params = new CodeActionParams();
     TextDocumentIdentifier textDocumentIdentifier = new TextDocumentIdentifier(documentContext.getUri());

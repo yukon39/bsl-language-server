@@ -21,7 +21,7 @@
  */
 package com.github._1c_syntax.bsl.languageserver.diagnostics;
 
-import com.github._1c_syntax.bsl.languageserver.providers.DiagnosticProvider;
+import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticInfo;
 import com.github._1c_syntax.bsl.languageserver.utils.Ranges;
 import org.eclipse.lsp4j.Diagnostic;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ public class UsingServiceTagDiagnosticTest extends AbstractDiagnosticTest<UsingS
   @Test
   void runTestWithConfigure() {
     // conf
-    Map<String, Object> configuration = DiagnosticProvider.getDefaultDiagnosticConfiguration(diagnosticInstance);
+    Map<String, Object> configuration = DiagnosticInfo.getDefaultDiagnosticConfiguration(diagnosticInstance);
     configuration.put("serviceTags", "todo");
     diagnosticInstance.configure(configuration);
 
