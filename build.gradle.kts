@@ -67,7 +67,7 @@ dependencies {
         exclude("org.glassfish", "javax.json")
     }
 
-    compile("com.github.1c-syntax:mdclasses:9df30a46ff35f99d8478e0634198e203badfbcfd")
+    compile("com.github.1c-syntax:mdclasses:f6c40d045e6577256a54926d69ad3bea8a375127")
 
     compileOnly("org.projectlombok", "lombok", lombok.version)
 
