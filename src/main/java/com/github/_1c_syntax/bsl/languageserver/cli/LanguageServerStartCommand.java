@@ -55,7 +55,7 @@ public class LanguageServerStartCommand implements Command {
     File configurationFile = new File(configurationOption);
 
     LanguageServerConfiguration configuration = LanguageServerConfiguration.create(configurationFile);
-    LanguageServer server = new BSLLanguageServer(configuration);
+    LanguageServer server = new BSLLanguageServer(configuration, configurationFile);
 
     Launcher<LanguageClient> launcher = getLanguageClientLauncher(server, configuration);
 

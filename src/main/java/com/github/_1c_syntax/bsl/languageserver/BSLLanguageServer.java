@@ -25,6 +25,7 @@ import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConf
 import com.github._1c_syntax.bsl.languageserver.context.ServerContext;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.lsp4j.CodeLensOptions;
+import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ServerCapabilities;
@@ -39,17 +40,70 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 public class BSLLanguageServer implements LanguageServer, LanguageClientAware {
 
   private final LanguageServerConfiguration configuration;
+
   private BSLTextDocumentService textDocumentService;
   private BSLWorkspaceService workspaceService;
   private boolean shutdownWasCalled;
   private ServerContext context;
+
+  public BSLLanguageServer(LanguageServerConfiguration configuration, File configurationFile) {
+    this(configuration);
+
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    executor.submit(() -> {
+      String configurationFileName = configurationFile.getName();
+      try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+        Path configurationDir = configurationFile.toPath().getParent();
+        configurationDir.register(
+          watchService,
+          StandardWatchEventKinds.ENTRY_CREATE,
+          StandardWatchEventKinds.ENTRY_DELETE,
+          StandardWatchEventKinds.ENTRY_MODIFY
+        );
+
+        WatchKey key;
+        while ((key = watchService.take()) != null) {
+          for (WatchEvent<?> event : key.pollEvents()) {
+            Path watchedFile = (Path) event.context();
+            if (watchedFile == null || !watchedFile.toFile().getName().equals(configurationFileName)) {
+              continue;
+            }
+
+            LOGGER.info(watchedFile.toFile().getPath());
+            LOGGER.info(watchedFile.toAbsolutePath().toFile().getPath());
+
+            var newConfiguration = LanguageServerConfiguration.create(watchedFile.toAbsolutePath().toFile());
+            var params = new DidChangeConfigurationParams(newConfiguration);
+            workspaceService.didChangeConfiguration(params);
+            
+            LOGGER.info("BSL Language Server configuration was reloaded");
+          }
+          key.reset();
+        }
+
+      } catch (IOException e) {
+        LOGGER.error(e.getMessage(), e);
+      } catch (InterruptedException e) {
+        LOGGER.error(e.getMessage(), e);
+        Thread.currentThread().interrupt();
+      }
+    });
+
+  }
 
   public BSLLanguageServer(LanguageServerConfiguration configuration) {
     this.configuration = configuration;

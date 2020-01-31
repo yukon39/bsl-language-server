@@ -22,6 +22,7 @@
 package com.github._1c_syntax.bsl.languageserver;
 
 import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConfiguration;
+import lombok.SneakyThrows;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -29,7 +30,6 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.WorkspaceService;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,12 +47,9 @@ public class BSLWorkspaceService implements WorkspaceService {
   }
 
   @Override
+  @SneakyThrows
   public void didChangeConfiguration(DidChangeConfigurationParams params) {
-    try {
-      PropertyUtils.copyProperties(configuration, params.getSettings());
-    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-      throw new RuntimeException(e);
-    }
+    PropertyUtils.copyProperties(configuration, params.getSettings());
   }
 
   @Override
