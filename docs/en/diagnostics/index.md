@@ -8,15 +8,19 @@ To escape individual sections of code or files from triggering diagnostics, you 
 
 ## Implemented diagnostics
 
-Total: **93**
+Total: **94**
 
 <<<<<<< develop
 * Error: **30**
 * Code smell: **55**
 =======
 * Error: **29**
+<<<<<<< develop
 * Code smell: **60**
 >>>>>>> CommonModuleNameFullAccessDiagnostic
+=======
+* Code smell: **61**
+>>>>>>> CommonModuleNameCashedDiagnostic
 * Vulnerability: **2**
 * Security Hotspot: **2**
 
@@ -30,8 +34,12 @@ Total: **93**
 | [CommentedCode](CommentedCode.md) | Commented out code | Yes | Minor | Code smell | `standard`<br/>`badpractice` |
 | [CommitTransactionOutsideTryCatch](CommitTransactionOutsideTryCatch.md) | Violating transaction rules for the 'CommitTransaction' method | Yes | Major | Error | `standard` |
 <<<<<<< develop
+<<<<<<< develop
 | [CommonModuleAssign](CommonModuleAssign.md) | CommonModuleAssign | Yes | Blocker | Error | `error` |
 =======
+=======
+| [CommonModuleNameCached](CommonModuleNameCached.md) | Missed postfix "Cached" | Yes | Info | Code smell | `standard` |
+>>>>>>> CommonModuleNameCashedDiagnostic
 | [CommonModuleNameClient](CommonModuleNameClient.md) | Missed postfix "Client" | Yes | Info | Code smell | `standard` |
 | [CommonModuleNameClientServer](CommonModuleNameClientServer.md) | Missed postfix "ClientServer" | Yes | Major | Code smell | `badpractice`<br/>`standard`<br/>`unpredictable` |
 | [CommonModuleNameFullAccess](CommonModuleNameFullAccess.md) | Missed postfix "FullAccess" | Yes | Info | Code smell | `standard` |

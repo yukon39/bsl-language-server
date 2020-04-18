@@ -122,8 +122,19 @@
                 "CommitTransactionOutsideTryCatch": {
                     "$ref": "diagnostics-schema.json#/definitions/CommitTransactionOutsideTryCatch"
                 },
+<<<<<<< develop
                 "CommonModuleAssign": {
                     "$ref": "diagnostics-schema.json#/definitions/CommonModuleAssign"
+=======
+                "CommonModuleNameCached": {
+                    "$ref": "diagnostics-schema.json#/definitions/CommonModuleNameCached"
+                },
+                "CommonModuleNameClient": {
+                    "$ref": "diagnostics-schema.json#/definitions/CommonModuleNameClient"
+                },
+                "CommonModuleNameClientServer": {
+                    "$ref": "diagnostics-schema.json#/definitions/CommonModuleNameClientServer"
+>>>>>>> CommonModuleNameCashedDiagnostic
                 },
                 "CommonModuleNameFullAccess": {
                     "$ref": "diagnostics-schema.json#/definitions/CommonModuleNameFullAccess"

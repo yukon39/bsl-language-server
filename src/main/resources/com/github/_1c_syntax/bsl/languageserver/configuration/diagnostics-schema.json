@@ -96,8 +96,23 @@
             "title": "Violating transaction rules for the 'CommitTransaction' method",
             "$id": "#/definitions/CommitTransactionOutsideTryCatch"
         },
+<<<<<<< develop
         "CommonModuleAssign": {
             "description": "CommonModuleAssign",
+=======
+        "CommonModuleNameCached": {
+            "description": "Missed postfix \"Cached\"",
+            "default": null,
+            "type": [
+                "boolean",
+                "object"
+            ],
+            "title": "Missed postfix \"Cached\"",
+            "$id": "#/definitions/CommonModuleNameCached"
+        },
+        "CommonModuleNameClient": {
+            "description": "Missed postfix \"Client\"",
+>>>>>>> CommonModuleNameCashedDiagnostic
             "default": null,
             "type": [
                 "boolean",
