@@ -8,7 +8,7 @@ To escape individual sections of code or files from triggering diagnostics, you 
 
 ## Implemented diagnostics
 
-Total: **94**
+Total: **95**
 
 <<<<<<< develop
 * Error: **30**
@@ -16,11 +16,15 @@ Total: **94**
 =======
 * Error: **29**
 <<<<<<< develop
+<<<<<<< develop
 * Code smell: **60**
 >>>>>>> CommonModuleNameFullAccessDiagnostic
 =======
 * Code smell: **61**
 >>>>>>> CommonModuleNameCashedDiagnostic
+=======
+* Code smell: **62**
+>>>>>>> precommit
 * Vulnerability: **2**
 * Security Hotspot: **2**
 
@@ -44,6 +48,7 @@ Total: **94**
 | [CommonModuleNameClientServer](CommonModuleNameClientServer.md) | Missed postfix "ClientServer" | Yes | Major | Code smell | `badpractice`<br/>`standard`<br/>`unpredictable` |
 | [CommonModuleNameFullAccess](CommonModuleNameFullAccess.md) | Missed postfix "FullAccess" | Yes | Info | Code smell | `standard` |
 | [CommonModuleNameGlobal](CommonModuleNameGlobal.md) | Missed postfix "Global" | Yes | Info | Code smell | `standard` |
+| [CommonModuleNameGlobalClient](CommonModuleNameGlobalClient.md) | Global module with postfix "Client" | Yes | Info | Code smell | `error` |
 | [CommonModuleNameServerCall](CommonModuleNameServerCall.md) | Missed postfix "ServerCall" | Yes | Info | Code smell | `standard` |
 >>>>>>> CommonModuleNameFullAccessDiagnostic
 | [CompilationDirectiveLost](CompilationDirectiveLost.md) | Methods compilation directive | Yes | Major | Code smell | `standard`<br/>`unpredictable` |
