@@ -8,9 +8,9 @@
 
 ## Список реализованных диагностик
 
-Общее количество: **92**
+Общее количество: **93**
 
-* Дефект кода: **59**
+* Дефект кода: **60**
 * Уязвимость: **2**
 * Ошибка: **30**
 * Потенциальная уязвимость: **2**
@@ -29,6 +29,7 @@
 =======
 | [CommonModuleNameClient](CommonModuleNameClient.md) | Пропущен постфикс "Клиент" | Да | Информационный | Дефект кода | `standard` |
 | [CommonModuleNameClientServer](CommonModuleNameClientServer.md) | Пропущен постфикс "КлиентСервер" | Да | Важный | Дефект кода | `badpractice`<br/>`standard`<br/>`unpredictable` |
+| [CommonModuleNameFullAccess](CommonModuleNameFullAccess.md) | Пропущен постфикс "ПолныеПрава" | Да | Информационный | Дефект кода | `standard` |
 | [CommonModuleNameGlobal](CommonModuleNameGlobal.md) | Пропущен постфикс "Глобальный" | Да | Информационный | Дефект кода | `standard` |
 | [CommonModuleNameServerCall](CommonModuleNameServerCall.md) | Пропущен постфикс "ВызовСервера" | Да | Информационный | Дефект кода | `standard` |
 >>>>>>> CommonModuleNameGlobalDiagnostic

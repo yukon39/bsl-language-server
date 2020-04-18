@@ -8,10 +8,15 @@ To escape individual sections of code or files from triggering diagnostics, you 
 
 ## Implemented diagnostics
 
-Total: **92**
+Total: **93**
 
+<<<<<<< develop
 * Error: **30**
 * Code smell: **55**
+=======
+* Error: **29**
+* Code smell: **60**
+>>>>>>> CommonModuleNameFullAccessDiagnostic
 * Vulnerability: **2**
 * Security Hotspot: **2**
 
@@ -24,7 +29,15 @@ Total: **92**
 | [CognitiveComplexity](CognitiveComplexity.md) | Cognitive complexity | Yes | Critical | Code smell | `brainoverload` |
 | [CommentedCode](CommentedCode.md) | Commented out code | Yes | Minor | Code smell | `standard`<br/>`badpractice` |
 | [CommitTransactionOutsideTryCatch](CommitTransactionOutsideTryCatch.md) | Violating transaction rules for the 'CommitTransaction' method | Yes | Major | Error | `standard` |
+<<<<<<< develop
 | [CommonModuleAssign](CommonModuleAssign.md) | CommonModuleAssign | Yes | Blocker | Error | `error` |
+=======
+| [CommonModuleNameClient](CommonModuleNameClient.md) | Missed postfix "Client" | Yes | Info | Code smell | `standard` |
+| [CommonModuleNameClientServer](CommonModuleNameClientServer.md) | Missed postfix "ClientServer" | Yes | Major | Code smell | `badpractice`<br/>`standard`<br/>`unpredictable` |
+| [CommonModuleNameFullAccess](CommonModuleNameFullAccess.md) | Missed postfix "FullAccess" | Yes | Info | Code smell | `standard` |
+| [CommonModuleNameGlobal](CommonModuleNameGlobal.md) | Missed postfix "Global" | Yes | Info | Code smell | `standard` |
+| [CommonModuleNameServerCall](CommonModuleNameServerCall.md) | Missed postfix "ServerCall" | Yes | Info | Code smell | `standard` |
+>>>>>>> CommonModuleNameFullAccessDiagnostic
 | [CompilationDirectiveLost](CompilationDirectiveLost.md) | Methods compilation directive | Yes | Major | Code smell | `standard`<br/>`unpredictable` |
 | [CompilationDirectiveNeedLess](CompilationDirectiveNeedLess.md) | Needless compilation directive | Yes | Major | Code smell | `clumsy`<br/>`standard`<br/>`unpredictable` |
 | [CreateQueryInCycle](CreateQueryInCycle.md) | Execution query on cycle | Yes | Critical | Error | `performance` |
