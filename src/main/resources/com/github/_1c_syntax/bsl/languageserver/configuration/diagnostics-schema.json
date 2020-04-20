@@ -96,10 +96,16 @@
             "title": "Violating transaction rules for the 'CommitTransaction' method",
             "$id": "#/definitions/CommitTransactionOutsideTryCatch"
         },
-<<<<<<< develop
         "CommonModuleAssign": {
             "description": "CommonModuleAssign",
-=======
+            "default": null,
+            "type": [
+                "boolean",
+                "object"
+            ],
+            "title": "CommonModuleAssign",
+            "$id": "#/definitions/CommonModuleAssign"
+        },
         "CommonModuleNameCached": {
             "description": "Missed postfix \"Cached\"",
             "default": null,
@@ -112,14 +118,23 @@
         },
         "CommonModuleNameClient": {
             "description": "Missed postfix \"Client\"",
->>>>>>> CommonModuleNameCashedDiagnostic
             "default": null,
             "type": [
                 "boolean",
                 "object"
             ],
-            "title": "CommonModuleAssign",
-            "$id": "#/definitions/CommonModuleAssign"
+            "title": "Missed postfix \"Client\"",
+            "$id": "#/definitions/CommonModuleNameClient"
+        },
+        "CommonModuleNameClientServer": {
+            "description": "Missed postfix \"ClientServer\"",
+            "default": null,
+            "type": [
+                "boolean",
+                "object"
+            ],
+            "title": "Missed postfix \"ClientServer\"",
+            "$id": "#/definitions/CommonModuleNameClientServer"
         },
         "CommonModuleNameFullAccess": {
             "description": "Missed postfix \"FullAccess\"",
