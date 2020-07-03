@@ -41,12 +41,11 @@ public interface Symbol {
 
   List<Symbol> getChildren();
 
-  default void clearParseTreeData() {
-  }
-
   default Optional<Symbol> getRootParent() {
     return getParent().flatMap(Symbol::getRootParent).or(() -> Optional.of(this));
   }
+
+  void accept(SymbolTreeVisitor visitor);
 
   static Symbol emptySymbol() {
     return new Symbol() {
@@ -54,6 +53,7 @@ public interface Symbol {
       @Getter private final Range range = Ranges.create(-1, 0, -1, 0);
       @Getter @Setter private Optional<Symbol> parent = Optional.empty();
       @Getter private final List<Symbol> children = Collections.emptyList();
+      @Override public void accept(SymbolTreeVisitor visitor) { }
     };
   }
 

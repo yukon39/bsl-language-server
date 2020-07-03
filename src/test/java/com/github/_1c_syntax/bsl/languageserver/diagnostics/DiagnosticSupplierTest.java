@@ -21,8 +21,8 @@
  */
 package com.github._1c_syntax.bsl.languageserver.diagnostics;
 
-import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConfiguration;
 import com.github._1c_syntax.bsl.languageserver.configuration.Language;
+import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConfiguration;
 import com.github._1c_syntax.bsl.languageserver.configuration.diagnostics.Mode;
 import com.github._1c_syntax.bsl.languageserver.configuration.diagnostics.SkipSupport;
 import com.github._1c_syntax.bsl.languageserver.context.FileType;
@@ -202,7 +202,7 @@ class DiagnosticSupplierTest {
     assertThat(diagnosticSupplier.getDiagnosticInstances(documentContext))
       .noneMatch(diagnostic -> diagnostic instanceof CompilationDirectiveLostDiagnostic);
 
-    when(documentContext.getModuleType()).thenReturn(ModuleType.Unknown);
+    when(documentContext.getModuleType()).thenReturn(ModuleType.UNKNOWN);
     assertThat(diagnosticSupplier.getDiagnosticInstances(documentContext))
       .noneMatch(diagnostic -> diagnostic instanceof CompilationDirectiveLostDiagnostic);
   }
@@ -218,12 +218,12 @@ class DiagnosticSupplierTest {
     assertThat(diagnosticSupplier.getDiagnosticInstances(documentContext))
       .anyMatch(diagnostic -> diagnostic instanceof UnusedLocalMethodDiagnostic);
 
-    when(documentContext.getModuleType()).thenReturn(ModuleType.Unknown);
+    when(documentContext.getModuleType()).thenReturn(ModuleType.UNKNOWN);
     when(documentContext.getFileType()).thenReturn(FileType.BSL);
     assertThat(diagnosticSupplier.getDiagnosticInstances(documentContext))
       .noneMatch(diagnostic -> diagnostic instanceof UnusedLocalMethodDiagnostic);
 
-    when(documentContext.getModuleType()).thenReturn(ModuleType.Unknown);
+    when(documentContext.getModuleType()).thenReturn(ModuleType.UNKNOWN);
     when(documentContext.getFileType()).thenReturn(FileType.OS);
     assertThat(diagnosticSupplier.getDiagnosticInstances(documentContext))
       .anyMatch(diagnostic -> diagnostic instanceof UnusedLocalMethodDiagnostic);
@@ -368,16 +368,16 @@ class DiagnosticSupplierTest {
     // when
     lsConfiguration.getDiagnosticsOptions().setMode(Mode.ONLY);
     Map<String, Either<Boolean, Map<String, Object>>> rules = new HashMap<>();
-    rules.put("Typo", Either.forLeft(true));
+    rules.put("Typo", Either.forLeft(false));
     rules.put("TooManyReturns", Either.forLeft(true));
 
     lsConfiguration.getDiagnosticsOptions().setParameters(rules);
     List<BSLDiagnostic> diagnostics = diagnosticSupplier.getDiagnosticInstances(documentContext);
 
     assertThat(diagnostics)
-      .hasSize(2)
+      .hasSize(1)
       .flatExtracting(Object::getClass)
-      .contains(TypoDiagnostic.class)
+      .doesNotContain(TypoDiagnostic.class)
       .contains(TooManyReturnsDiagnostic.class)
     ;
   }
@@ -392,7 +392,7 @@ class DiagnosticSupplierTest {
     // when
     lsConfiguration.getDiagnosticsOptions().setMode(Mode.EXCEPT);
     Map<String, Either<Boolean, Map<String, Object>>> rules = new HashMap<>();
-    rules.put("Typo", Either.forLeft(true));
+    rules.put("Typo", Either.forLeft(false));
     rules.put("TooManyReturns", Either.forLeft(true));
 
     lsConfiguration.getDiagnosticsOptions().setParameters(rules);

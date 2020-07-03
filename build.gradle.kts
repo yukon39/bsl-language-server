@@ -12,10 +12,11 @@ plugins {
     jacoco
     id("com.github.hierynomus.license") version "0.15.0"
     id("org.sonarqube") version "2.8"
-    id("io.franzbecker.gradle-lombok") version "3.3.0"
+    id("io.franzbecker.gradle-lombok") version "4.0.0"
     id("me.qoomon.git-versioning") version "3.0.0"
     id("com.github.ben-manes.versions") version "0.28.0"
     id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("io.freefair.javadoc-links") version "5.1.0"
 }
 
 repositories {
@@ -42,18 +43,19 @@ gitVersioning.apply(closureOf<GitVersioningPluginConfig> {
 
 val jacksonVersion = "2.10.3"
 val junitVersion = "5.6.1"
+val languageToolVersion = "4.2"
 
 dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j
     implementation("org.eclipse.lsp4j", "org.eclipse.lsp4j", "0.9.0")
 
-    implementation("org.languagetool", "languagetool-core", "4.2")
+    implementation("org.languagetool", "languagetool-core", languageToolVersion)
 
     // https://mvnrepository.com/artifact/org.languagetool/language-en
-    implementation("org.languagetool", "language-en", "4.2")
+    implementation("org.languagetool", "language-en", languageToolVersion)
 
     // https://mvnrepository.com/artifact/org.languagetool/language-ru
-    implementation("org.languagetool", "language-ru", "4.2")
+    implementation("org.languagetool", "language-ru", languageToolVersion)
 
     implementation("info.picocli", "picocli", "4.2.0")
 
@@ -77,7 +79,7 @@ dependencies {
 
     implementation("org.reflections", "reflections", "0.9.10")
 
-    implementation("com.github.1c-syntax", "bsl-parser", "01cc1512e10b667a0ec3fdd2307ca0221bf52684") {
+    implementation("com.github.1c-syntax", "bsl-parser", "0.14.1") {
         exclude("com.tunnelvisionlabs", "antlr4-annotations")
         exclude("com.ibm.icu", "*")
         exclude("org.antlr", "ST4")
@@ -86,15 +88,16 @@ dependencies {
         exclude("org.glassfish", "javax.json")
     }
 
-    implementation("com.github.1c-syntax", "utils", "0.2.1")
-    implementation("com.github.1c-syntax", "mdclasses", "86be1579c4")
+    implementation("com.github.1c-syntax", "utils", "0.3.0")
+    implementation("com.github.1c-syntax", "mdclasses", "cff4b25f84bb7edcb2f55cfa0a12668f9461c816")
 
     compileOnly("org.projectlombok", "lombok", lombok.version)
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
+    testImplementation("org.junit.jupiter", "junit-jupiter-params", junitVersion)
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
 
-    testImplementation("org.assertj", "assertj-core", "3.15.0")
+    testImplementation("org.assertj", "assertj-core", "3.16.1")
     testImplementation("org.mockito", "mockito-core", "3.3.3")
 
     testImplementation("com.ginsberg", "junit5-system-exit", "1.0.0")
@@ -179,6 +182,7 @@ license {
     exclude("**/*.xml")
     exclude("**/*.json")
     exclude("**/*.bsl")
+    exclude("**/*.os")
 }
 
 sonarqube {
@@ -213,8 +217,13 @@ tasks.register("precommit") {
 }
 
 tasks {
-    val delombok by registering(io.franzbecker.gradle.lombok.task.DelombokTask::class) {
+    val delombok by registering(JavaExec::class) {
         dependsOn(compileJava)
+
+        main = project.extensions.findByType(io.franzbecker.gradle.lombok.LombokPluginExtension::class)!!.main
+        args = listOf("delombok")
+        classpath = project.configurations.getByName("compileClasspath")
+
         jvmArgs = listOf("-Dfile.encoding=UTF-8")
         val outputDir by extra { file("$buildDir/delombok") }
         outputs.dir(outputDir)
@@ -242,8 +251,6 @@ publishing {
             artifact(tasks["sourcesJar"])
             artifact(tasks["shadowJar"])
             artifact(tasks["javadocJar"])
-//            artifact(tasks.shadowJar.get())
-//            artifact(tasks.javadoc.get())
             pom.withXml {
                 val dependenciesNode = asNode().appendNode("dependencies")
                 

@@ -28,8 +28,10 @@ import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticT
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticType;
 import com.github._1c_syntax.bsl.parser.BSLParser;
 import com.github._1c_syntax.mdclasses.metadata.additional.ModuleType;
+import com.github._1c_syntax.utils.CaseInsensitivePattern;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 @DiagnosticMetadata(
@@ -49,9 +51,8 @@ import java.util.regex.Pattern;
 )
 public class ExcessiveAutoTestCheckDiagnostic extends AbstractVisitorDiagnostic {
 
-  private static final Pattern ERROR_EXPRESSION = Pattern.compile(
-    "(\\.Свойство\\(\"АвтоТест\"\\)|=\"АвтоТест\"|\\.Property\\(\"AutoTest\"\\)|=\"AutoTest\")$",
-    Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE
+  private static final Pattern ERROR_EXPRESSION = CaseInsensitivePattern.compile(
+    "(\\.Свойство\\(\"АвтоТест\"\\)|=\"АвтоТест\"|\\.Property\\(\"AutoTest\"\\)|=\"AutoTest\")$"
   );
 
   public ExcessiveAutoTestCheckDiagnostic(DiagnosticInfo info) {
@@ -74,13 +75,16 @@ public class ExcessiveAutoTestCheckDiagnostic extends AbstractVisitorDiagnostic 
   }
 
   private boolean codeBlockWithOnlyReturn(BSLParser.CodeBlockContext codeBlock) {
-    return codeBlock
-      .getTokens()
-      .stream()
-      .map(t -> t.getType())
-      .filter(t -> t != BSLParser.WHITE_SPACE)
-      .filter(t -> t != BSLParser.LINE_COMMENT)
-      .filter(t -> t != BSLParser.SEMICOLON)
-      .noneMatch(t -> t != BSLParser.RETURN_KEYWORD);
+    List<? extends BSLParser.StatementContext> statements = codeBlock.statement();
+
+    if (statements.size() == 1) {
+      BSLParser.CompoundStatementContext compoundStatement = statements.get(0).compoundStatement();
+
+      if (compoundStatement != null) {
+        return compoundStatement.returnStatement() != null;
+      }
+    }
+
+    return false;
   }
 }

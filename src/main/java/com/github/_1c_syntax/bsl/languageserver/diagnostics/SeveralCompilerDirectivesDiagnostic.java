@@ -53,17 +53,17 @@ public class SeveralCompilerDirectivesDiagnostic extends AbstractVisitorDiagnost
     if (Trees.findAllRuleNodes(ctx, BSLParser.RULE_compilerDirective).size() > 1) {
       diagnosticStorage.addDiagnostic(ctx.moduleVarsList());
     }
-    return super.visitModuleVar(ctx);
+    return ctx;
   }
 
   @Override
   public ParseTree visitSub(BSLParser.SubContext ctx) {
     Optional<MethodSymbol> methodSymbol = documentContext.getSymbolTree().getMethodSymbol(ctx);
-    if (methodSymbol.isPresent()
+    if (methodSymbol.flatMap(MethodSymbol::getCompilerDirectiveKind).isPresent()
       && Trees.findAllRuleNodes(ctx, BSLParser.RULE_compilerDirective).size() > 1) {
       diagnosticStorage.addDiagnostic(methodSymbol.get().getSubNameRange());
     }
 
-    return super.visitSub(ctx);
+    return ctx;
   }
 }

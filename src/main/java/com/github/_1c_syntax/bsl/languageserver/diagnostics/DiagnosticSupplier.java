@@ -21,10 +21,10 @@
  */
 package com.github._1c_syntax.bsl.languageserver.diagnostics;
 
+import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConfiguration;
 import com.github._1c_syntax.bsl.languageserver.configuration.diagnostics.DiagnosticsOptions;
 import com.github._1c_syntax.bsl.languageserver.configuration.diagnostics.Mode;
 import com.github._1c_syntax.bsl.languageserver.configuration.diagnostics.SkipSupport;
-import com.github._1c_syntax.bsl.languageserver.configuration.LanguageServerConfiguration;
 import com.github._1c_syntax.bsl.languageserver.context.DocumentContext;
 import com.github._1c_syntax.bsl.languageserver.context.FileType;
 import com.github._1c_syntax.bsl.languageserver.diagnostics.metadata.DiagnosticCompatibilityMode;
@@ -142,11 +142,14 @@ public class DiagnosticSupplier {
     boolean enabledDirectly = diagnosticConfiguration != null
       && diagnosticConfiguration.isLeft()
       && diagnosticConfiguration.getLeft();
+    boolean disabledDirectly = diagnosticConfiguration != null
+      && diagnosticConfiguration.isLeft()
+      && !diagnosticConfiguration.getLeft();
     boolean hasDefinedSetting = enabledDirectly || hasCustomConfiguration;
 
     boolean passedAllMode = mode == Mode.ALL;
     boolean passedOnlyMode = mode == Mode.ONLY && hasDefinedSetting;
-    boolean passedExcept = mode == Mode.EXCEPT && !hasDefinedSetting;
+    boolean passedExcept = mode == Mode.EXCEPT && !(hasDefinedSetting || disabledDirectly);
     boolean passedOn = mode == Mode.ON && (activatedByDefault || hasDefinedSetting);
 
     return passedOn
